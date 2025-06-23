@@ -11,7 +11,7 @@ export default async function EditCategoryPage({
   });
 
   if (!category) {
-    return <p>Categoría no encontrada</p>;
+    return <p className="text-red-500">Categoría no encontrada</p>;
   }
 
   return (
