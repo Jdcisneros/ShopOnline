@@ -131,7 +131,7 @@ export default function FeaturedProductsClient({
                     src={imageUrl}
                     alt={name}
                     width={50}
-                    fill
+                   
                     height={50}
                     className="rounded object-cover"
                   />

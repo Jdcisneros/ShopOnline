@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
 import Link from "next/link";
 import { Bookmark } from "lucide-react";
 import toast from "react-hot-toast";
@@ -84,7 +84,8 @@ export default function ProductCard({
           <Image
             src={product.imageUrl}
             alt={product.name}
-            fill
+            width={250}
+            height={250}
             className="object-cover group-hover:scale-105 transition-transform"
             sizes="(max-width: 768px) 100vw, 33vw"
             style={{ objectFit: "cover" }}

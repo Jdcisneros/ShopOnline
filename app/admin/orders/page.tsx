@@ -242,7 +242,8 @@ export default function AdminOrdersPage() {
                   <Image
                     src={item.imageUrl}
                     alt={item.name}
-                    fill
+                    width={50}
+                    height={50}
                     className="w-20 h-20 object-cover rounded-md border"
                   />
 
