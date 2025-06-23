@@ -7,6 +7,7 @@ import ProductModal from "./new/page";
 import toast from "react-hot-toast";
 import ProductFilters from "@/components/productFilters";
 import { Tag } from "lucide-react";
+import Image from "next/image";
 
 type Variant = {
   id: string;
@@ -169,7 +170,7 @@ export default function AdminProductsPage() {
                 >
                   {/* Imagen arriba */}
                   <div className="relative w-full pt-[75%] overflow-hidden rounded-t-xl border-b border-gray-200">
-                    <img
+                    <Image
                       src={product.imageUrl}
                       alt={product.name}
                       className="absolute top-0 left-0 w-full h-full object-cover"
@@ -277,7 +278,7 @@ export default function AdminProductsPage() {
                 >
                   {/* Imagen más chica a la izquierda */}
                   <div className="w-24 h-24 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200">
-                    <img
+                    <Image
                       src={product.imageUrl}
                       alt={product.name}
                       className="w-full h-full object-cover"

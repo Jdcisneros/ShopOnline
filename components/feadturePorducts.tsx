@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type Product = {
@@ -25,7 +26,7 @@ export default function FeaturedProducts() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
         {products.map((product) => (
           <div key={product.id} className="bg-white rounded shadow p-4">
-            <img
+            <Image
               src={product.imageUrl}
               alt={product.name}
               className="w-full h-40 object-cover rounded"

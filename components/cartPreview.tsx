@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import Link from "next/link";
 import { X, Trash2, ShoppingCart, Minus, Plus } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+import Image from "next/image";
 
 export default function CartPreview({
   open,
@@ -78,7 +79,7 @@ export default function CartPreview({
                   key={item.id}
                   className="bg-gray-50 rounded-xl p-4 flex gap-4 items-start shadow-sm"
                 >
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.name}
                     className="w-24 h-24 object-cover rounded-lg border"

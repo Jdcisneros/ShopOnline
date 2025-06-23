@@ -1,6 +1,7 @@
 "use client";
 
 import ProductFilters from "@/components/productFilters";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
 import toast from "react-hot-toast";
@@ -126,7 +127,7 @@ export default function FeaturedProductsClient({
                 className="border-t border-gray-100 hover:bg-gray-50 transition"
               >
                 <td className="px-4 py-3">
-                  <img
+                  <Image
                     src={imageUrl}
                     alt={name}
                     width={50}

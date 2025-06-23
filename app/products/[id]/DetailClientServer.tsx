@@ -8,6 +8,7 @@ import ShippingCalculatorButton from "@/components/shippingCalculator";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 type Color = {
   id: string;
@@ -126,7 +127,7 @@ export default function ProductClientDetail({ product }: { product: Product }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Imagen y favoritos */}
         <div className="relative rounded-2xl overflow-hidden border bg-white shadow-sm aspect-square">
-          <img
+          <Image
             src={product.imageUrl}
             alt={product.name}
             className="w-full h-full object-cover"

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Bookmark } from "lucide-react";
 import toast from "react-hot-toast";
 import React from "react";
+import Image from "next/image";
 
 interface Product {
   id: string;
@@ -80,7 +81,7 @@ export default function ProductCard({
     <div className="block group text-center relative">
       <Link href={`/products/${product.id}`}>
         <div className="w-full aspect-square overflow-hidden rounded-lg bg-white border border-gray-300 shadow-sm group-hover:shadow-md transition duration-300 relative">
-          <img
+          <Image
             src={product.imageUrl}
             alt={product.name}
             className="object-cover group-hover:scale-105 transition-transform"

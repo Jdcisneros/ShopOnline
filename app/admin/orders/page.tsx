@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import Image from "next/image";
 
 type Order = {
   id: string;
@@ -238,7 +239,7 @@ export default function AdminOrdersPage() {
                   key={item.id}
                   className="flex flex-col sm:flex-row items-start sm:items-center py-4 gap-4"
                 >
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.name}
                     className="w-20 h-20 object-cover rounded-md border"
