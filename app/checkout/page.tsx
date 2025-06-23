@@ -112,6 +112,7 @@ export default function CheckoutPage() {
               <Image
                 src={item.imageUrl}
                 alt={item.name}
+                fill
                 className="w-16 h-16 object-cover rounded border"
               />
               <div className="flex-1 space-y-1">

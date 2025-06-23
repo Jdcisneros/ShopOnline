@@ -29,6 +29,7 @@ export default function FeaturedProducts() {
             <Image
               src={product.imageUrl}
               alt={product.name}
+              fill
               className="w-full h-40 object-cover rounded"
             />
             <h3 className="mt-2 font-semibold">{product.name}</h3>

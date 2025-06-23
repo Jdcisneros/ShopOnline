@@ -173,6 +173,7 @@ export default function AdminProductsPage() {
                     <Image
                       src={product.imageUrl}
                       alt={product.name}
+                      fill
                       className="absolute top-0 left-0 w-full h-full object-cover"
                       loading="lazy"
                     />
@@ -281,6 +282,7 @@ export default function AdminProductsPage() {
                     <Image
                       src={product.imageUrl}
                       alt={product.name}
+                      fill
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />

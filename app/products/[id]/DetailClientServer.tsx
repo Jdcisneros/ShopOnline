@@ -130,6 +130,7 @@ export default function ProductClientDetail({ product }: { product: Product }) {
           <Image
             src={product.imageUrl}
             alt={product.name}
+            fill
             className="w-full h-full object-cover"
           />
 
