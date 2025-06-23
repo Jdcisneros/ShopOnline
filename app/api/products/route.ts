@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -85,8 +86,6 @@ export async function POST(req: NextRequest) {
       price,
       imageUrl,
       categoryId,
-      sizesIds = [],
-      colorsIds = [],
       newSizes = [],
       newColors = [],
       variants = [],
@@ -115,10 +114,6 @@ export async function POST(req: NextRequest) {
       const size = await prisma.size.create({ data: { name: sizeName } });
       createdSizes.push(size.id);
     }
-    const finalSizesIds = [
-      ...sizesIds.filter((id) => id !== "custom"),
-      ...createdSizes,
-    ];
 
     // Crear colores nuevos
     const createdColors = [];
@@ -128,10 +123,6 @@ export async function POST(req: NextRequest) {
       });
       createdColors.push(color.id);
     }
-    const finalColorsIds = [
-      ...colorsIds.filter((id) => id !== "custom"),
-      ...createdColors,
-    ];
 
     // Crear variantes con stock
     const variantsData = variants.map((v: any) => ({
