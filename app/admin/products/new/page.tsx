@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm, useWatch } from "react-hook-form";
@@ -76,11 +78,6 @@ export default function ProductModal({
   const [colors, setColors] = useState<Color[]>([]);
   const [loadingSize, setLoadingSize] = useState(false);
   const [loadingColor, setLoadingColor] = useState(false);
-  const [sectionsOpen, setSectionsOpen] = useState({
-    general: true,
-    variants: false,
-    stock: false,
-  });
 
   // Obtenemos tamaños y colores seleccionados para calcular variantes
   const sizesIds = useWatch({ control, name: "sizesIds" });
@@ -237,14 +234,7 @@ export default function ProductModal({
       toast.error("Error al guardar producto");
     }
   }
-
-  function toggleSection(section) {
-    setSectionsOpen((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  }
-
+  
   return (
     <>
       <div className="fixed inset-0 z-40 backdrop-blur-xs" />

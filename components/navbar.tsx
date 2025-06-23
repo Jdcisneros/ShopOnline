@@ -8,7 +8,6 @@ import {
   ShoppingBag,
   Menu,
   X,
-  ChevronDown,
   User,
   ChevronRight,
 } from "lucide-react";

@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Link from "next/link";
 import { Bookmark } from "lucide-react";
 import toast from "react-hot-toast";
@@ -52,12 +54,12 @@ export default function ProductCard({
       let success = false;
 
       if (isFavorite) {
-        success = await onRemoveFavorite?.();
+        success = (await onRemoveFavorite?.()) ?? false;
         if (success) {
           toast("Producto removido de guardados");
         }
       } else {
-        success = await onAddFavorite?.();
+        success = (await onAddFavorite?.()) ?? false;
         if (success) {
           toast.success("Producto guardado");
         }

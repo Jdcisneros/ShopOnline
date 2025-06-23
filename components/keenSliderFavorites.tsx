@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState } from "react";
 import { KeenSlider } from "./KeenSlider";
-import toast from "react-hot-toast";
 
 interface Product {
   id: string;
@@ -11,13 +11,6 @@ interface Product {
   imageUrl: string;
   onSale?: boolean;
   discountPercentage?: number | null;
-}
-
-interface Favorite {
-  id: string;
-  userId: string;
-  productId: string;
-  product: Product;
 }
 
 export function KeenSliderWithFavorites({

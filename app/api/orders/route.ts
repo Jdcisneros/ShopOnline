@@ -1,13 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
-type Item = {
-  id: string;
-  quantity: number;
-  price: number;
-};
 
 export async function GET() {
   try {

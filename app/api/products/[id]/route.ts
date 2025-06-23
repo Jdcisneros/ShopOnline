@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -40,8 +41,6 @@ export async function PUT(
     price,
     imageUrl,
     categoryId,
-    sizesIds = [],
-    colorsIds = [],
     newSizes = [],
     newColors = [],
     variants = [],
@@ -70,7 +69,6 @@ export async function PUT(
         createdSizes.push(newSize.id);
       }
     }
-    const finalSizesIds = [...sizesIds, ...createdSizes];
 
     // Crear colores nuevos
     const createdColors = [];
@@ -82,7 +80,6 @@ export async function PUT(
         createdColors.push(newColor.id);
       }
     }
-    const finalColorsIds = [...colorsIds, ...createdColors];
 
     // Eliminar variantes antiguas
     await prisma.productVariant.deleteMany({

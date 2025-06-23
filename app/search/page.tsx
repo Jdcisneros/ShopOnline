@@ -20,7 +20,7 @@ export default async function SearchPage({ searchParams }: Props) {
   return (
     <main className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">
-        Resultados para: <span className="text-blue-600">"{q}"</span>
+        Resultados para: <span className="text-blue-600">{q}</span>
       </h1>
       {products.length === 0 ? (
         <p>No se encontraron productos.</p>

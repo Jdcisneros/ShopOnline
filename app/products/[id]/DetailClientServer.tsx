@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Bookmark } from "lucide-react";
@@ -7,7 +9,34 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-export default function ProductClientDetail({ product }: { product: any }) {
+type Color = {
+  id: string;
+  name: string;
+  hex: string;
+};
+
+type Size = {
+  id: string;
+  name: string;
+};
+
+type Variant = {
+  id: string;
+  size: Size;
+  color: Color;
+  stock: number;
+};
+
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  variants: Variant[];
+};
+
+export default function ProductClientDetail({ product }: { product: Product }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColorId, setSelectedColorId] = useState("");

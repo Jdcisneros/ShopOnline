@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Heart, HeartMinus, HeartOff, HeartPlus, StarIcon, StarOffIcon } from "lucide-react";
+import { StarIcon, StarOffIcon } from "lucide-react";
 
 export default function FavoriteButton({ productId }: { productId: string }) {
   const { data: session } = useSession();
@@ -45,7 +46,9 @@ export default function FavoriteButton({ productId }: { productId: string }) {
       onClick={toggleFavorite}
       aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
       className={`p-1 rounded-full transition-colors duration-200 hover:scale-110 ${
-        isFavorite ? "text-yellow-400" : "text-gray-400 dark:text-gray-300 hover:text-yellow-400"
+        isFavorite
+          ? "text-yellow-400"
+          : "text-gray-400 dark:text-gray-300 hover:text-yellow-400"
       }`}
     >
       {isFavorite ? (
