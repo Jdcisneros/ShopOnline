@@ -1,11 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import EditCategoryForm from "./form";
 
-export default async function EditCategoryPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+
+export default async function EditCategoryPage({ params }: any) {
   const category = await prisma.category.findUnique({
     where: { id: params.id },
   });

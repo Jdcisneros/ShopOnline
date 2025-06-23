@@ -3,11 +3,11 @@
 
 import { useEffect, useState } from "react";
 import ProductActions from "@/components/productActions";
-import ProductModal from "./new/page";
 import toast from "react-hot-toast";
 import ProductFilters from "@/components/productFilters";
 import { Tag } from "lucide-react";
 import Image from "next/image";
+import NewProductModal from "@/components/ProductModal";
 
 type Variant = {
   id: string;
@@ -363,7 +363,7 @@ export default function AdminProductsPage() {
         )}
 
         {modalOpen && (
-          <ProductModal product={editingProduct} onClose={handleCloseModal} />
+          <NewProductModal product={editingProduct} onClose={handleCloseModal} />
         )}
       </div>
 

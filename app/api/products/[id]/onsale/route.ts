@@ -1,9 +1,10 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type { RouteContext } from "next";
 
-export async function PATCH(req: NextRequest, context: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
-    const { id } = context.params;
+    const id = context.params.id as string;
     const { onSale } = await req.json();
 
     const updated = await prisma.product.update({

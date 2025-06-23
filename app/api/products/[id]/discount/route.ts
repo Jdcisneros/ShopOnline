@@ -1,12 +1,11 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type { RouteContext } from "next"; // 👈 Importás el tipo correcto
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, context: RouteContext) {
+  const id = context.params.id as string; // forzás el tipo si querés asegurarlo
+
   try {
-    const id = params.id;
     const { discountPercentage } = await req.json();
 
     if (
@@ -14,8 +13,8 @@ export async function PATCH(
       discountPercentage < 0 ||
       discountPercentage > 100
     ) {
-      return new Response(
-        JSON.stringify({ message: "Invalid discount percentage" }),
+      return NextResponse.json(
+        { message: "Invalid discount percentage" },
         { status: 400 }
       );
     }
@@ -25,9 +24,12 @@ export async function PATCH(
       data: { discountPercentage },
     });
 
-    return new Response(JSON.stringify(updated), { status: 200 });
+    return NextResponse.json(updated);
   } catch (error) {
     console.error("Error updating discount:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

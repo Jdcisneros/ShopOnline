@@ -1,17 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import type { RouteContext } from "next";
+interface VariantInput {
+  sizeId: string;
+  colorId: string;
+  stock: number;
+}
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// GET
+export async function GET(_req: NextRequest, context: RouteContext) {
+  const id = context.params.id as string;
+
   try {
     const product = await prisma.product.findUnique({
-      where: { id: params.id },
-      include: {
-        variants: true,
-      },
+      where: { id },
+      include: { variants: true },
     });
 
     if (!product) {
@@ -31,10 +34,9 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// PUT
+export async function PUT(req: NextRequest, context: RouteContext) {
+  const id = context.params.id as string;
   const {
     name,
     description,
@@ -55,12 +57,11 @@ export async function PUT(
 
   try {
     const updatedProduct = await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: { name, description, price, imageUrl, categoryId },
     });
 
-    // Crear talles nuevos
-    const createdSizes = [];
+    const createdSizes: string[] = [];
     for (const size of newSizes) {
       if (size?.name?.trim()) {
         const newSize = await prisma.size.create({
@@ -70,8 +71,7 @@ export async function PUT(
       }
     }
 
-    // Crear colores nuevos
-    const createdColors = [];
+    const createdColors: string[] = [];
     for (const color of newColors) {
       if (color?.name?.trim() && color?.hex) {
         const newColor = await prisma.color.create({
@@ -81,14 +81,10 @@ export async function PUT(
       }
     }
 
-    // Eliminar variantes antiguas
-    await prisma.productVariant.deleteMany({
-      where: { productId: params.id },
-    });
+    await prisma.productVariant.deleteMany({ where: { productId: id } });
 
-    // Crear variantes con stock
-    const variantsData = variants.map((v: any) => ({
-      productId: params.id,
+    const variantsData = (variants as VariantInput[]).map((v) => ({
+      productId: id,
       sizeId: v.sizeId,
       colorId: v.colorId,
       stock: v.stock,
@@ -106,32 +102,15 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: Request,
-  context: { params: { id: string } }
-) {
-  const productId = context.params.id;
+// DELETE
+export async function DELETE(_req: NextRequest, context: RouteContext) {
+  const id = context.params.id as string;
 
   try {
-    // Eliminar items de órdenes relacionados a este producto
-    await prisma.orderItem.deleteMany({
-      where: { productId },
-    });
-
-    // Eliminar favoritos relacionados a este producto
-    await prisma.favorite.deleteMany({
-      where: { productId },
-    });
-
-    // Eliminar variantes relacionadas
-    await prisma.productVariant.deleteMany({
-      where: { productId },
-    });
-
-    // Finalmente eliminar el producto
-    await prisma.product.delete({
-      where: { id: productId },
-    });
+    await prisma.orderItem.deleteMany({ where: { productId: id } });
+    await prisma.favorite.deleteMany({ where: { productId: id } });
+    await prisma.productVariant.deleteMany({ where: { productId: id } });
+    await prisma.product.delete({ where: { id } });
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {

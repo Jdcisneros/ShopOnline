@@ -1,20 +1,23 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import type { RouteContext } from "next";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
+    const id = context.params.id as string;
     const { featured } = await req.json();
 
     const updated = await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: { featured },
     });
+
     return NextResponse.json(updated);
   } catch (error) {
-    console.error(error);
-    return new NextResponse("Error updating featured", { status: 500 });
+    console.error("Error updating featured:", error);
+    return NextResponse.json(
+      { error: "Error updating featured" },
+      { status: 500 }
+    );
   }
 }

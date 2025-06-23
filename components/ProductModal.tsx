@@ -31,7 +31,7 @@ type FormData = {
   newColorHex?: string;
 };
 
-export default function ProductModal({
+export default function NewProductModal({
   product,
   onClose,
 }: {
@@ -234,7 +234,7 @@ export default function ProductModal({
       toast.error("Error al guardar producto");
     }
   }
-  
+
   return (
     <>
       <div className="fixed inset-0 z-40 backdrop-blur-xs" />

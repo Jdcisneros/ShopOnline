@@ -1,13 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/productCard";
 
-type Props = {
-  searchParams: { q?: string };
-};
-
-export default async function SearchPage({ searchParams }: Props) {
-  const q = searchParams.q ?? "";
-
+export default async function SearchPage(props: any) {
+  const q = props.searchParams?.q ?? "";
   const products = await prisma.product.findMany({
     where: {
       name: {

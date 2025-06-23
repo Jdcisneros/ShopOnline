@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import CategoryPageClient from "./categoryPage";
 
-export default async function CategoryPage({ params }: { params: { id: string } }) {
+export default async function CategoryPage({ params }: any) {
   const category = await prisma.category.findUnique({
     where: { id: params.id },
     include: { products: true },
