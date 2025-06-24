@@ -7,9 +7,7 @@ export default function CheckoutPage() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async () => {
-    // lógica de envío
-    // ...
-    setShowSuccess(true); // mostrar modal
+    setShowSuccess(true); 
   };
 
   return (

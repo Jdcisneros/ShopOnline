@@ -1,18 +1,20 @@
-import ClientProvider from "./clientProvider";
-import MainNavbarServer from "@/components/navbarServer";
+import ClientWrapper from "./clientWrapper";
+import "./globals.css";
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body>
-        <ClientProvider>
-          <MainNavbarServer />
+        <ClientWrapper>
           {children}
-        </ClientProvider>
+          {modal}
+        </ClientWrapper>
       </body>
     </html>
   );

@@ -1,3 +1,4 @@
+"use client";
 export default function InfoPage() {
   return (
     <main className="container mx-auto p-4">
