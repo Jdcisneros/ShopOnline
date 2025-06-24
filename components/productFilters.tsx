@@ -115,7 +115,19 @@ export default function ProductFilters({
       {/* Ordenamiento */}
       <select
         value={localFilters.sortBy || ""}
-        onChange={(e) => updateFilter("sortBy", e.target.value || undefined)}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (
+            value === "price-asc" ||
+            value === "price-desc" ||
+            value === "name-asc" ||
+            value === "name-desc"
+          ) {
+            updateFilter("sortBy", value);
+          } else {
+            updateFilter("sortBy", undefined);
+          }
+        }}
         className="border border-gray-300 rounded px-3 py-2 text-sm min-w-[160px]"
       >
         <option value="">Ordenar por</option>

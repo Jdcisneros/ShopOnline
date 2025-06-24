@@ -4,13 +4,7 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useCartStore } from "@/store/cartStore";
-import {
-  ShoppingBag,
-  Menu,
-  X,
-  User,
-  ChevronRight,
-} from "lucide-react";
+import { ShoppingBag, Menu, X, User, ChevronRight } from "lucide-react";
 import CartPreview from "./cartPreview";
 
 import {
@@ -25,30 +19,23 @@ type Category = {
   name: string;
 };
 
-export default function MainNavbar() {
+interface MainNavbarProps {
+  categories: Category[];
+}
+
+export default function MainNavbar({ categories }: MainNavbarProps) {
   const { data: session } = useSession();
   const cartItems = useCartStore((state) => state.items);
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [cartPreviewOpen, setCartPreviewOpen] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
 
   const cartPreviewRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      const res = await fetch("/api/categories");
-      if (res.ok) {
-        const data = await res.json();
-        setCategories(data);
-      }
-    }
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

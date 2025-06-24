@@ -37,3 +37,30 @@ export type Product = {
   variants: ProductVariant[];
   inStock: boolean; // tu propiedad calculada
 };
+
+type OrderItemVariant = {
+  id: string;
+  sizeName: string;
+  colorName: string;
+  colorHex: string;
+};
+
+type OrderItem = {
+  id: string;
+  name: string;
+  imageUrl: string;
+  quantity: number;
+  price: number;
+  variant: OrderItemVariant;
+};
+
+export type Order = {
+  id: string;
+  createdAt: string | Date;
+  user: {
+    email: string;
+  };
+  status: "PAID" | "PENDING" | "CANCELLED" | string; // ajusta según tus estados
+  items: OrderItem[];
+  total?: number; // si tienes total calculado o lo puedes agregar
+};

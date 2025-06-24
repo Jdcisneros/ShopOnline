@@ -1,12 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-// ✅ Tipado correcto y compatible con App Router
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id;
+export async function PUT(req: NextRequest, context: any) {
+  const id = context.params.id;
   const { name } = await req.json();
 
   if (!name || name.length < 2) {
@@ -25,11 +22,8 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id;
+export async function DELETE(_req: NextRequest, context: any) {
+  const id = context.params.id;
 
   try {
     await prisma.category.delete({

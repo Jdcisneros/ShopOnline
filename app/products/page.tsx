@@ -12,17 +12,19 @@ interface Product {
 
 export default async function ProductsPage() {
   const productsRaw = await prisma.product.findMany({
-    include: { category: true },
+    include: {
+      category: true,
+      variants: true,
+    },
     orderBy: { createdAt: "desc" },
   });
 
-  // Mapear para agregar inStock y quitar campos no necesarios
   const products: Product[] = productsRaw.map((p) => ({
     id: p.id,
     name: p.name,
     price: p.price,
     imageUrl: p.imageUrl,
-    inStock: p.stock > 0,
+    inStock: p.variants.some((variant: { stock: number }) => variant.stock > 0),
     category: p.category
       ? { id: p.category.id, name: p.category.name }
       : { id: "", name: "" },

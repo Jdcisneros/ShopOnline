@@ -15,6 +15,12 @@ export default async function OrdersPage() {
       items: {
         include: {
           product: true,
+          variant: {
+            include: {
+              size: true,
+              color: true,
+            },
+          },
         },
       },
     },
@@ -43,16 +49,10 @@ export default async function OrdersPage() {
               <p className="text-sm font-medium text-neutral-700">
                 Pedido #{order.id.slice(0, 8)}
               </p>
-              <span
-                className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                  order.status === "PAID"
-                    ? "bg-green-100 text-green-800"
-                    : order.status === "PENDING"
-                    ? "bg-yellow-100 text-yellow-800"
-                    : "bg-gray-100 text-gray-800"
-                }`}
-              >
-                {order.status}
+              {/* Como no tenés status, lo removemos */}
+              <span className="text-xs font-medium text-neutral-500">
+                {/* o podés dejar "Completado", "Procesado", etc. */}
+                Confirmado
               </span>
             </div>
             <p className="text-xs text-neutral-500 mb-4">
@@ -63,6 +63,12 @@ export default async function OrdersPage() {
                 <li key={item.id} className="flex justify-between py-2">
                   <span className="text-neutral-700">
                     {item.product.name}{" "}
+                    {item.variant && (
+                      <span className="text-neutral-400">
+                        (Talle: {item.variant.size.name}, Color:{" "}
+                        {item.variant.color.name})
+                      </span>
+                    )}{" "}
                     <span className="text-neutral-400">(x{item.quantity})</span>
                   </span>
                   <span className="text-neutral-800">

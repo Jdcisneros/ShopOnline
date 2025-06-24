@@ -1,4 +1,5 @@
 import ClientProvider from "./clientProvider";
+import MainNavbarServer from "@/components/navbarServer";
 
 export default function RootLayout({
   children,
@@ -8,7 +9,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ClientProvider>{children}</ClientProvider>
+        <ClientProvider>
+          <MainNavbarServer />
+          {children}
+        </ClientProvider>
       </body>
     </html>
   );

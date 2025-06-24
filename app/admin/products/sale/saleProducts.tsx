@@ -157,7 +157,6 @@ export default function OnSaleProductsClient({
                     <Image
                       src={imageUrl}
                       alt={name}
-                      fill
                       width={50}
                       height={50}
                       className="rounded object-cover"

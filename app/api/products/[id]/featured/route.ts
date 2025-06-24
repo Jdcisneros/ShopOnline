@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import type { RouteContext } from "next";
 
-export async function PATCH(req: NextRequest, context: RouteContext) {
+
+export async function PATCH(req: NextRequest, context: any) {
   try {
     const id = context.params.id as string;
     const { featured } = await req.json();

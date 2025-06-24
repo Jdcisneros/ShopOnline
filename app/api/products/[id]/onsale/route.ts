@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import type { RouteContext } from "next";
 
-export async function PATCH(req: NextRequest, context: RouteContext) {
+export async function PATCH(req: NextRequest, context: any) {
   try {
     const id = context.params.id as string;
     const { onSale } = await req.json();

@@ -1,8 +1,10 @@
-import { AuthOptions } from "next-auth";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { NextAuthOptions } from "next-auth/";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 
-export const authOptions: AuthOptions = {
+export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -11,6 +13,10 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
@@ -45,6 +51,7 @@ export const authOptions: AuthOptions = {
         token.id = user.id;
         token.isAdmin = user.isAdmin;
       }
+      console.log("jwt token:", token);
       return token;
     },
     async session({ session, token }) {
@@ -52,6 +59,7 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id;
         session.user.isAdmin = token.isAdmin;
       }
+      console.log("session callback:", session);
       return session;
     },
   },

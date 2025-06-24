@@ -8,10 +8,15 @@ export async function GET() {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-  });
+  const email = session.user.email;
+  if (!email) {
+    return NextResponse.json(
+      { error: "Email no disponible en la sesión" },
+      { status: 400 }
+    );
+  }
 
+  const user = await prisma.user.findUnique({ where: { email } });
   if (!user)
     return NextResponse.json({ error: "User not found" }, { status: 404 });
 
@@ -29,16 +34,20 @@ export async function POST(req: NextRequest) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-  });
+  const email = session.user.email;
+  if (!email) {
+    return NextResponse.json(
+      { error: "Email no disponible en la sesión" },
+      { status: 400 }
+    );
+  }
 
+  const user = await prisma.user.findUnique({ where: { email } });
   if (!user)
     return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const { productId } = await req.json();
 
-  // Verificar si ya existe el favorito
   const existing = await prisma.favorite.findFirst({
     where: { userId: user.id, productId },
   });
@@ -51,10 +60,7 @@ export async function POST(req: NextRequest) {
   }
 
   const favorite = await prisma.favorite.create({
-    data: {
-      userId: user.id,
-      productId,
-    },
+    data: { userId: user.id, productId },
   });
 
   return NextResponse.json(favorite);
@@ -65,10 +71,15 @@ export async function DELETE(req: NextRequest) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-  });
+  const email = session.user.email;
+  if (!email) {
+    return NextResponse.json(
+      { error: "Email no disponible en la sesión" },
+      { status: 400 }
+    );
+  }
 
+  const user = await prisma.user.findUnique({ where: { email } });
   if (!user)
     return NextResponse.json({ error: "User not found" }, { status: 404 });
 

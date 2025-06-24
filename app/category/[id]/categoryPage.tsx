@@ -5,19 +5,37 @@ import ProductCard from "../../../components/productCard";
 import ProductFilters from "@/components/productFilters";
 import Link from "next/link";
 
-type Product = {
+type ProductVariant = {
   id: string;
-  name: string;
-  price: number;
+  productId: string;
+  sizeId: string;
+  colorId: string;
   stock: number;
-  description: string;
-  imageUrl: string;
+  size: { id: string; name: string };
+  color: { id: string; name: string; hex: string };
 };
 
 type Category = {
   id: string;
   name: string;
-  products: Product[];
+  createdAt: Date;
+};
+
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  categoryId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  featured: boolean;
+  onSale: boolean;
+  discountPercentage?: number;
+  category: Category | null;
+  variants: ProductVariant[];
+  // no ponemos inStock aquí porque lo calculamos dinámicamente
 };
 
 type Filters = {
@@ -31,7 +49,7 @@ type Filters = {
 export default function CategoryPageClient({
   category,
 }: {
-  category: Category;
+  category: Category & { products: Product[] };
 }) {
   const [filters, setFilters] = useState<Filters>({});
 
@@ -49,7 +67,8 @@ export default function CategoryPageClient({
     if (filters.maxPrice !== undefined)
       filtered = filtered.filter((p) => p.price <= filters.maxPrice!);
 
-    if (filters.inStockOnly) filtered = filtered.filter((p) => p.stock > 0);
+    if (filters.inStockOnly)
+      filtered = filtered.filter((p) => p.variants.some((v) => v.stock > 0));
 
     if (filters.sortBy === "price-asc")
       filtered.sort((a, b) => a.price - b.price);

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import {
@@ -9,20 +9,33 @@ import {
   CubeIcon,
 } from "@heroicons/react/24/outline";
 
+type OrderItem = {
+  price: string | number;
+  quantity: number;
+};
+
+type Order = {
+  items: OrderItem[];
+};
+
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user.isAdmin) redirect("/");
+  if (!session?.user?.isAdmin) redirect("/");
 
-  const [products, users, orders] = await Promise.all([
+  const [products, users] = await Promise.all([
     prisma.product.count(),
     prisma.user.count(),
-    prisma.order.findMany({ include: { items: true } }),
   ]);
 
+  const orders: Order[] = await prisma.order.findMany({
+    include: { items: true },
+  });
+
   const totalSales = orders.reduce((sum, order) => {
-    const orderTotal = order.items.reduce((itemSum, item) => {
-      return itemSum + Number(item.price) * item.quantity;
-    }, 0);
+    const orderTotal = order.items.reduce(
+      (itemSum, item) => itemSum + Number(item.price) * item.quantity,
+      0
+    );
     return sum + orderTotal;
   }, 0);
 

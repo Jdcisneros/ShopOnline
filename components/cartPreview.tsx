@@ -82,7 +82,8 @@ export default function CartPreview({
                   <Image
                     src={item.imageUrl}
                     alt={item.name}
-                    fill
+                    width={50}
+                    height={50}
                     className="w-24 h-24 object-cover rounded-lg border"
                   />
                   <div className="flex-1 space-y-1">

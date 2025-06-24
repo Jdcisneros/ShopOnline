@@ -43,16 +43,17 @@ export async function GET(req: NextRequest) {
       };
     }
 
+    // Forzamos los valores 'asc'/'desc' como literales con 'as const'
     const orderBy =
       sortBy === "price-asc"
-        ? { price: "asc" }
+        ? { price: "asc" as const }
         : sortBy === "price-desc"
-        ? { price: "desc" }
+        ? { price: "desc" as const }
         : sortBy === "name-asc"
-        ? { name: "asc" }
+        ? { name: "asc" as const }
         : sortBy === "name-desc"
-        ? { name: "desc" }
-        : { createdAt: "desc" };
+        ? { name: "desc" as const }
+        : { createdAt: "desc" as const };
 
     const products = await prisma.product.findMany({
       where,
@@ -63,7 +64,7 @@ export async function GET(req: NextRequest) {
             size: true,
             color: true,
           },
-        }, // importante si querés incluir talles y colores al consultar
+        },
       },
       orderBy,
     });
@@ -76,6 +77,21 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+interface SizeInput {
+  name: string;
+}
+
+interface ColorInput {
+  name: string;
+  hex: string;
+}
+
+interface VariantInput {
+  sizeId: string;
+  colorId: string;
+  stock: number;
 }
 
 export async function POST(req: NextRequest) {
@@ -108,24 +124,31 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Crear talles nuevos
-    const createdSizes = [];
-    for (const sizeName of newSizes.map((s) => s.name.trim()).filter(Boolean)) {
+    const typedNewSizes: SizeInput[] = newSizes;
+
+    const createdSizes: string[] = [];
+    for (const sizeName of typedNewSizes
+      .map((s) => s.name.trim())
+      .filter(Boolean)) {
       const size = await prisma.size.create({ data: { name: sizeName } });
       createdSizes.push(size.id);
     }
 
-    // Crear colores nuevos
-    const createdColors = [];
-    for (const colorData of newColors.filter((c) => c.name.trim() && c.hex)) {
+    const typedNewColors: ColorInput[] = newColors;
+
+    const createdColors: string[] = [];
+    for (const colorData of typedNewColors.filter(
+      (c) => c.name.trim() && c.hex
+    )) {
       const color = await prisma.color.create({
         data: { name: colorData.name.trim(), hex: colorData.hex },
       });
       createdColors.push(color.id);
     }
 
-    // Crear variantes con stock
-    const variantsData = variants.map((v: any) => ({
+    const typedVariants: VariantInput[] = variants;
+
+    const variantsData = typedVariants.map((v) => ({
       productId: product.id,
       sizeId: v.sizeId,
       colorId: v.colorId,

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import type { RouteContext } from "next";
+
 interface VariantInput {
   sizeId: string;
   colorId: string;
@@ -8,7 +9,7 @@ interface VariantInput {
 }
 
 // GET
-export async function GET(_req: NextRequest, context: RouteContext) {
+export async function GET(_req: NextRequest, context: any) {
   const id = context.params.id as string;
 
   try {
@@ -35,7 +36,7 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 }
 
 // PUT
-export async function PUT(req: NextRequest, context: RouteContext) {
+export async function PUT(req: NextRequest, context: any) {
   const id = context.params.id as string;
   const {
     name,
@@ -103,7 +104,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 }
 
 // DELETE
-export async function DELETE(_req: NextRequest, context: RouteContext) {
+export async function DELETE(_req: NextRequest, context: any) {
   const id = context.params.id as string;
 
   try {

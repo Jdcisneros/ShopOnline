@@ -1,9 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+type User = {
+  id: string;
+  name: string | null;
+  email: string | null;
+  isAdmin: boolean;
+  createdAt: Date;
+};
 
 export default async function AdminUsersPage() {
-  const users = await prisma.user.findMany({
+  const users: User[] = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
   });
 

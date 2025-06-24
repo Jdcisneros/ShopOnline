@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import type { RouteContext } from "next"; // 👈 Importás el tipo correcto
 
-export async function PATCH(req: NextRequest, context: RouteContext) {
-  const id = context.params.id as string; // forzás el tipo si querés asegurarlo
+export async function PATCH(req: NextRequest, context: any) {
+  const id = context.params.id;
 
   try {
     const { discountPercentage } = await req.json();

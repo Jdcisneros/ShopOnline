@@ -1,6 +1,23 @@
 import { prisma } from "@/lib/prisma";
 import OnSaleProductsClient from "./saleProducts";
-import { Product } from "@/types/types";
+import { Product, ProductVariant, Category } from "@/types/types";
+
+// Define un tipo para los productos raw según lo que devuelve Prisma:
+type ProductRaw = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  categoryId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  featured: boolean;
+  onSale: boolean;
+  discountPercentage?: number | null;
+  category: Category | null;
+  variants: ProductVariant[];
+};
 
 export default async function SaleProductsPage() {
   const [productsRaw, categories] = await Promise.all([
@@ -14,12 +31,16 @@ export default async function SaleProductsPage() {
     prisma.category.findMany({ orderBy: { name: "asc" } }),
   ]);
 
-  const products: Product[] = productsRaw
-    .filter((p) => p.categoryId !== null)
-    .map((p) => ({
+  // Añade el tipo ProductRaw explícito en el parámetro p:
+  const products: Product[] = (productsRaw as ProductRaw[])
+    .filter((p: ProductRaw) => p.categoryId !== null)
+    .map((p: ProductRaw) => ({
       ...p,
       categoryId: p.categoryId!,
-      inStock: p.variants.some((v) => v.stock > 0),
+      description: p.description ?? "",
+      imageUrl: p.imageUrl ?? "",
+      updatedAt: p.updatedAt ?? new Date(),
+      inStock: p.variants.some((v: ProductVariant) => v.stock > 0),
       discountPercentage: p.discountPercentage ?? undefined,
     }));
 
