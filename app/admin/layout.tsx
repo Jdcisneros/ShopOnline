@@ -13,8 +13,8 @@ import {
   Tag,
   Star,
   Percent,
-  Home
-  
+  Home,
+  Store,
 } from "lucide-react";
 
 const navItems = [
@@ -38,11 +38,11 @@ export default function AdminLayout({
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 mt-20">
-      {/* Sidebar */}
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar Desktop */}
       <div
         className={cn(
-          "hidden lg:flex flex-col h-full bg-white shadow-sm transition-all duration-300",
+          "hidden lg:flex flex-col h-screen bg-white shadow-sm transition-all duration-300",
           collapsed ? "w-20" : "w-64"
         )}
       >
@@ -57,26 +57,38 @@ export default function AdminLayout({
             <Menu size={20} />
           </button>
         </div>
-        <nav className="flex flex-col gap-2 px-2">
-          {navItems.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all",
-                pathname === href
-                  ? "bg-indigo-100 text-indigo-700 font-semibold"
-                  : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
-              )}
-            >
-              <Icon size={20} />
-              {!collapsed && <span>{label}</span>}
-            </Link>
-          ))}
-        </nav>
+
+        <div className="flex flex-col justify-between flex-1 px-2 pb-4">
+          <nav className="flex flex-col gap-2">
+            {navItems.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all",
+                  pathname === href
+                    ? "bg-indigo-100 text-indigo-700 font-semibold"
+                    : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                )}
+              >
+                <Icon size={20} />
+                {!collapsed && <span>{label}</span>}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Volver a la tienda */}
+          <Link
+            href="/"
+            className="mt-4 flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-black transition"
+          >
+            <Store size={20} />
+            {!collapsed && <span>Volver a la tienda</span>}
+          </Link>
+        </div>
       </div>
 
-      {/* Sidebar mobile */}
+      {/* Sidebar Mobile */}
       <AnimatePresence>
         {sidebarOpen && (
           <>
@@ -88,7 +100,7 @@ export default function AdminLayout({
               onClick={() => setSidebarOpen(false)}
             />
             <motion.aside
-              className="fixed left-0 top-0 bottom-0 z-50 w-64 bg-white p-6 shadow-md"
+              className="fixed left-0 top-0 bottom-0 z-50 w-64 bg-white p-6 shadow-md flex flex-col justify-between"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
@@ -103,7 +115,8 @@ export default function AdminLayout({
                   ✕
                 </button>
               </div>
-              <nav className="space-y-2">
+
+              <nav className="flex flex-col gap-2">
                 {navItems.map(({ href, label, icon: Icon }) => (
                   <Link
                     key={href}
@@ -121,14 +134,23 @@ export default function AdminLayout({
                   </Link>
                 ))}
               </nav>
+
+              {/* Volver a la tienda (mobile) */}
+              <Link
+                href="/"
+                className="mt-4 flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-black transition"
+              >
+                <Store size={20} />
+                <span>Volver a la tienda</span>
+              </Link>
             </motion.aside>
           </>
         )}
       </AnimatePresence>
 
-      {/* Main content */}
-      <div className="flex flex-col flex-1">
-        <header className=" flex items-center justify-between bg-white px-4 shadow-sm lg:px-6">
+      {/* Main Content */}
+      <div className="flex flex-col flex-1 overflow-auto">
+        <header className="h-16 flex items-center justify-between bg-white px-4 shadow-sm lg:px-6">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-700 hover:text-indigo-600"
@@ -136,9 +158,14 @@ export default function AdminLayout({
           >
             <Menu size={24} />
           </button>
-          <div />
+          <span className="text-sm text-gray-500 hidden lg:inline-block">
+            Panel de administración
+          </span>
         </header>
-        <main className="flex-1 p-6 overflow-y-auto">{children}</main>
+
+        <main className="flex-1 p-6 max-w-full box-border overflow-auto">
+          {children}
+        </main>
       </div>
     </div>
   );

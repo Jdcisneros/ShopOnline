@@ -38,7 +38,12 @@ type Filters = {
   maxPrice?: number;
   inStockOnly?: boolean;
   sortBy?: "price-asc" | "price-desc" | "name-asc" | "name-desc";
+  sizeId?: string;
+  colorId?: string;
 };
+
+type Size = { id: string; name: string };
+type Color = { id: string; name: string; hex: string };
 
 type Category = { id: string; name: string };
 
@@ -49,14 +54,49 @@ export default function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [sizes, setSizes] = useState<Size[]>([]);
+  const [colors, setColors] = useState<Color[]>([]);
+
+  useEffect(() => {
+    function updateSize() {
+      setIsDesktop(window.innerWidth >= 768); // md breakpoint Tailwind (>=768px)
+    }
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+  const [page, setPage] = useState(1);
+  const limit = isDesktop ? 10 : 5;
+  const totalPages = Math.ceil(products.length / limit);
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const visibleProducts = products.slice(startIndex, endIndex);
 
   // Estado para guardar el id del producto que queremos eliminar y mostrar modal
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  useEffect(() => {
+    setPage(1);
+  }, [filters, isDesktop]);
 
   useEffect(() => {
     fetch("/api/categories")
       .then((res) => res.json())
       .then(setCategories);
+  }, []);
+  useEffect(() => {
+    fetch("/api/sizes")
+      .then((res) => res.json())
+      .then(setSizes)
+      .catch(() => setSizes([]));
+  }, []);
+
+  // fetch colores
+  useEffect(() => {
+    fetch("/api/colors")
+      .then((res) => res.json())
+      .then(setColors)
+      .catch(() => setColors([]));
   }, []);
 
   const fetchProducts = async (filters: Filters) => {
@@ -72,6 +112,8 @@ export default function AdminProductsPage() {
         query.set("maxPrice", String(filters.maxPrice));
       if (filters.inStockOnly) query.set("inStockOnly", "true");
       if (filters.sortBy) query.set("sortBy", filters.sortBy);
+      if (filters.sizeId) query.set("size", filters.sizeId);
+      if (filters.colorId) query.set("color", filters.colorId);
 
       const res = await fetch(`/api/products?${query.toString()}`);
       const data = await res.json();
@@ -130,7 +172,7 @@ export default function AdminProductsPage() {
 
   return (
     <>
-      <div className="p-6 mx-auto ">
+      <div className=" mx-auto ">
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-3xl font-bold  text-gray-800">Productos</h1>
 
@@ -148,6 +190,8 @@ export default function AdminProductsPage() {
         <ProductFilters
           categories={categories}
           filters={filters}
+          sizes={sizes}
+          colors={colors}
           onChange={setFilters}
         />
 
@@ -163,10 +207,10 @@ export default function AdminProductsPage() {
           <>
             {/* Desktop grid */}
             <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-8">
-              {products.map((product) => (
+              {visibleProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col"
+                  className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col min-h-[350px]"
                 >
                   {/* Imagen arriba */}
                   <div className="relative w-full pt-[75%] overflow-hidden rounded-t-xl border-b border-gray-200">
@@ -180,7 +224,7 @@ export default function AdminProductsPage() {
                   </div>
 
                   {/* Detalles abajo */}
-                  <div className="flex flex-col flex-1 p-6 gap-2">
+                  <div className="flex flex-col flex-1 gap-2 p-4">
                     <h2
                       className="text-xl font-semibold text-gray-900 truncate"
                       title={product.name}
@@ -271,28 +315,29 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Mobile list */}
-            <div className="flex flex-col space-y-4 md:hidden">
-              {products.map((product) => (
+            <div className="flex flex-col space-y-4 md:hidden w-full max-w-full box-border mx-auto">
+              {visibleProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="flex bg-white rounded-lg shadow p-3 gap-4"
+                  className="flex bg-white rounded-lg shadow p-4 gap-4 w-full max-w-full min-w-0"
                 >
-                  {/* Imagen más chica a la izquierda */}
+                  {/* Imagen */}
                   <div className="w-24 h-24 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200">
                     <Image
                       src={product.imageUrl}
                       alt={product.name}
-                      fill
+                      width={96}
+                      height={96}
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />
                   </div>
 
-                  {/* Detalles a la derecha */}
-                  <div className="flex flex-col flex-1 justify-between">
+                  {/* Detalles */}
+                  <div className="flex flex-col flex-1 justify-between min-w-0">
                     <div>
                       <h2
-                        className="text-lg font-semibold text-gray-900 truncate"
+                        className="text-lg font-semibold text-gray-900 truncate break-words"
                         title={product.name}
                       >
                         {product.name}
@@ -302,55 +347,52 @@ export default function AdminProductsPage() {
                         ${product.price.toFixed(2)}
                       </p>
 
-                      {/* Muestra compacta de talles y colores */}
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {/* Aquí muestra talles, ejemplo */}
+                      {/* Scroll horizontal para talles y colores */}
+                      <div className="flex gap-3 mt-3 overflow-x-auto no-scrollbar min-w-0">
+                        {/* Talles */}
                         {product.variants &&
                           Array.from(
                             new Map(
                               product.variants.map((v) => [v.size.id, v.size])
                             ).values()
-                          )
-                            .slice(0, 3)
-                            .map((size) => (
-                              <span
-                                key={size.id}
-                                className="px-2 py-0.5 border border-gray-300 rounded-full text-xs text-gray-700 select-none"
-                                title={`Talle: ${size.name}`}
-                              >
-                                {size.name}
-                              </span>
-                            ))}
-                        {/* Y colores */}
+                          ).map((size) => (
+                            <span
+                              key={size.id}
+                              className="px-3 py-1 border border-gray-300 rounded-full text-xs text-gray-700 whitespace-nowrap select-none"
+                              title={`Talle: ${size.name}`}
+                            >
+                              {size.name}
+                            </span>
+                          ))}
+
+                        {/* Colores */}
                         {product.variants &&
                           Array.from(
                             new Map(
                               product.variants.map((v) => [v.color.id, v.color])
                             ).values()
-                          )
-                            .slice(0, 3)
-                            .map((color) => (
-                              <div
-                                key={color.id}
-                                title={`Color: ${color.name}`}
-                                className="w-5 h-5 rounded-full border border-gray-300"
-                                style={{ backgroundColor: color.hex }}
-                              />
-                            ))}
+                          ).map((color) => (
+                            <div
+                              key={color.id}
+                              title={`Color: ${color.name}`}
+                              className="w-7 h-7 rounded-full border border-gray-300 shrink-0"
+                              style={{ backgroundColor: color.hex }}
+                            />
+                          ))}
                       </div>
                     </div>
 
                     {/* Botones */}
-                    <div className="flex gap-2 mt-4">
+                    <div className="flex gap-3 mt-5">
                       <button
                         onClick={() => handleEdit(product.id)}
-                        className="flex-1 bg-indigo-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-700 transition"
+                        className="flex-1 bg-indigo-600 text-white rounded-md py-3 text-sm font-semibold hover:bg-indigo-700 transition"
                       >
                         Editar
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="flex-1 bg-red-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-red-700 transition"
+                        className="flex-1 bg-red-600 text-white rounded-md py-3 text-sm font-semibold hover:bg-red-700 transition"
                       >
                         Eliminar
                       </button>
@@ -362,8 +404,33 @@ export default function AdminProductsPage() {
           </>
         )}
 
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-4 mt-6">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage(page - 1)}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Anterior
+            </button>
+            <span className="flex items-center">
+              Página {page} de {totalPages}
+            </span>
+            <button
+              disabled={page >= totalPages}
+              onClick={() => setPage(page + 1)}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Siguiente
+            </button>
+          </div>
+        )}
+
         {modalOpen && (
-          <NewProductModal product={editingProduct} onClose={handleCloseModal} />
+          <NewProductModal
+            product={editingProduct}
+            onClose={handleCloseModal}
+          />
         )}
       </div>
 

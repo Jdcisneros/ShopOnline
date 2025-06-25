@@ -16,8 +16,6 @@ type Category = { id: string; name: string };
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
-
-  // Modal states
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [creating, setCreating] = useState(false);
@@ -108,11 +106,11 @@ export default function AdminCategoriesPage() {
 
   return (
     <div className="p-6 mx-auto">
-      <div className="flex justify-between items-center mb-2">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">Categorías</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Categorías</h1>
         <button
           onClick={() => setCreating(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md transition focus-visible:outline focus-visible:outline-indigo-600"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 text-sm sm:text-base rounded-md transition focus-visible:outline focus-visible:outline-indigo-600"
         >
           + Nueva categoría
         </button>
@@ -131,8 +129,8 @@ export default function AdminCategoriesPage() {
           <table className="w-full text-sm text-gray-700 bg-white">
             <thead className="text-left text-gray-500 uppercase text-xs bg-gray-50">
               <tr>
-                <th className="px-4 py-3 break-words max-w">Nombre</th>
-                <th className="px-4 py-3 break-words w-48">Acciones</th>
+                <th className="px-4 py-3">Nombre</th>
+                <th className="px-4 py-3 w-48">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -168,25 +166,29 @@ export default function AdminCategoriesPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl space-y-5"
+            className="bg-white rounded-2xl p-6 w-full max-w-md md:max-w-xl shadow-xl space-y-5"
           >
             <h2 className="text-2xl font-bold text-gray-900 mb-1">
               {editingCategory ? "Editar categoría" : "Nueva categoría"}
             </h2>
 
-            <div>
-              <label className="block text-sm font-semibold mb-1">Nombre</label>
-              <input
-                {...register("name")}
-                className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                type="text"
-                disabled={isSubmitting}
-              />
-              {errors.name && (
-                <p className="text-red-600 text-sm mt-1">
-                  {errors.name.message}
-                </p>
-              )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <label className="block text-sm font-semibold mb-1">
+                  Nombre
+                </label>
+                <input
+                  {...register("name")}
+                  className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  type="text"
+                  disabled={isSubmitting}
+                />
+                {errors.name && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="flex justify-end gap-3 pt-3">

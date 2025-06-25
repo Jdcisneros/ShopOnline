@@ -1,6 +1,7 @@
 import { CategoryButtons } from "@/components/categoryButton";
 import HeroCarousel from "@/components/HeroCarousel";
 import { KeenSliderWithFavorites } from "@/components/keenSliderFavorites";
+import MainNavbarServer from "@/components/navbarServer";
 import { PaymentMethods } from "@/components/paymentMethod";
 import {
   getCategories,
@@ -17,6 +18,7 @@ export default async function HomePage() {
 
   return (
     <main>
+      <MainNavbarServer />
       {/* Hero */}
       <HeroCarousel />
 

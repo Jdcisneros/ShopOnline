@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// Obtener productos con filtros
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -13,6 +13,8 @@ export async function GET(req: NextRequest) {
     const maxPrice = searchParams.get("maxPrice");
     const inStockOnly = searchParams.get("inStockOnly") === "true";
     const sortBy = searchParams.get("sortBy") || undefined;
+    const sizeId = searchParams.get("size");
+    const colorId = searchParams.get("color");
 
     const where: any = {};
 
@@ -43,7 +45,17 @@ export async function GET(req: NextRequest) {
       };
     }
 
-    // Forzamos los valores 'asc'/'desc' como literales con 'as const'
+  
+    if (sizeId || colorId) {
+      where.variants = where.variants || { some: {} };
+      if (sizeId) {
+        where.variants.some.sizeId = sizeId;
+      }
+      if (colorId) {
+        where.variants.some.colorId = colorId;
+      }
+    }
+
     const orderBy =
       sortBy === "price-asc"
         ? { price: "asc" as const }

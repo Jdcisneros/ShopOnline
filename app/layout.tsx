@@ -3,7 +3,6 @@ import "./globals.css";
 
 export default function RootLayout({
   children,
-  modal,
 }: {
   children: React.ReactNode;
   modal: React.ReactNode;
@@ -13,7 +12,6 @@ export default function RootLayout({
       <body>
         <ClientWrapper>
           {children}
-          {modal}
         </ClientWrapper>
       </body>
     </html>
